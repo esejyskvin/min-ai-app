@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Min AI App</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 100px auto; text-align: center; background: #fafafa; }
+        textarea { width: 100%; height: 120px; border-radius: 12px; padding: 15px; border: 1px solid #ddd; font-size: 16px; margin-bottom: 20px; }
+        button { background: #000; color: white; border: none; padding: 12px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #333; }
+        #output { margin-top: 30px; text-align: left; padding: 20px; background: white; border-radius: 12px; border: 1px solid #eee; min-height: 40px; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Spørg min AI</h1>
+    <textarea id="prompt" placeholder="Skriv dit spørgsmål her..."></textarea><br>
+    <button onclick="askAI()">Send spørgsmål</button>
+    <div id="output">Svaret vil dukke op her...</div>
+
+    <script>
+        async function askAI() {
+            const prompt = document.getElementById('prompt').value;
+            const output = document.getElementById('output');
+            if(!prompt) return alert("Skriv lige noget først!");
+
+            output.innerText = "Tænker efter...";
+
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt })
+            });
+
+            const data = await response.json();
+            output.innerText = data.result || "Ups, der skete en fejl.";
+        }
+    </script>
+</body>
+</html>
